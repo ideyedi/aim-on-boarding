@@ -32,8 +32,8 @@ AIMMO On boarding
 flask  
 flask-classful  
 flask-apispec  
-mashmallow  
+marshmallow  
 mongoEngine  
 
 ## Period 
-2 Weeks
+1 months?
