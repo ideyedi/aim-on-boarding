@@ -37,3 +37,8 @@ mongoEngine
 
 ## Period 
 1 months?
+
+## git flow
+설치 후 init  
+그냥 쓰면 규칙대로 동작하는 거였네  
+
