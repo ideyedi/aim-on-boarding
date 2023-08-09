@@ -28,4 +28,12 @@ AIMMO On boarding
   - 내가 쓴 댓
   - 내가 좋아요 한 글
 
+## Tech stacks
+flask  
+flask-classful  
+flask-apispec  
+mashmallow  
+mongoEngine  
 
+## Period 
+2 Weeks
