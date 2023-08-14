@@ -10,8 +10,9 @@ def create_app():
          expose_headers=["content-disposition"],
          max_age=6000).init_app(app)
 
-    @app.route("/")
+    @app.route("/actuator")
     def heath_check():
-        return "{status.HTTP_200_OK}"
+        return ("OK",
+                status.HTTP_200_OK)
 
     return app
