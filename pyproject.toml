@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "onboarding"
+version = "0.1.0"
+description = "AIMMO on-boarding project"
+authors = ["Enrique <enrique@aimmo.co.kr>"]
+license = "GPL-3.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+flask = "^2.3.2"
+flask-api = "^3.1"
+flask-classful = "^0.14.2"
+flask-apispec = "^0.11.4"
+mongoengine = "^0.27.0"
+marshmallow = "^3.20.1"
+flask-cors = "^4.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
