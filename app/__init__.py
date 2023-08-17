@@ -1,10 +1,11 @@
+import mongoengine as me
+
 from flask import Flask, Request, jsonify
 from flask_cors import CORS
 from flask_api import status
 from flask_swagger_ui import get_swaggerui_blueprint
 
-import mongoengine as me
-
+from app.view.user import UserView
 from app.route.user import blueprint as user_bp
 
 import os
@@ -39,7 +40,8 @@ def create_app():
     #
     register_db()
     #
-    app.register_blueprint(user_bp)
+    # app.register_blueprint(user_bp)
+    UserView.register(app, route_base="/user")
 
     @app.route("/actuator")
     def heath_check():

@@ -1,11 +1,10 @@
 from flask import Flask, request, Blueprint
 from flask_api import status
 from flask_apispec import doc, use_kwargs
-from pydantic import ValidationError
 
 from app.model.user import User as UserModel
 
-blueprint = Blueprint("user", __name__, url_prefix="/user")
+blueprint = Blueprint("temp", __name__, url_prefix="/temp")
 
 
 @blueprint.route("test", methods=["GET"])
