@@ -5,6 +5,15 @@ PHASE = Literal["dev", "qa", "alpha", "prod"]
 
 
 class DefaultConfig(BaseConfig):
-    app_name: str = "on-boarding POST"
+    app_name: str = "on-boarding Project"
     author: str = "Enrique"
     author_email: str = "enrique@aimmo.co.kr"
+
+
+class DevelopConfig(DefaultConfig):
+    phase: PHASE = "dev"
+    mongoUrl: str = "mongomock://localhost"
+
+
+class ProductConfig(DefaultConfig):
+    phase: PHASE = "prod"
