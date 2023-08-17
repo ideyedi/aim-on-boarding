@@ -12,7 +12,7 @@ class DefaultConfig(BaseConfig):
 
 class DevelopConfig(DefaultConfig):
     phase: PHASE = "dev"
-    mongoUrl: str = "mongomock://localhost"
+    mongoUrl: str = "mongodb://localhost:27017/on_board"
 
 
 class ProductConfig(DefaultConfig):
