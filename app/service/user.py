@@ -3,7 +3,7 @@ from flask_api import status
 from functools import wraps
 from marshmallow import ValidationError
 
-import app.schema.user as user
+from app.schema.user import CreateSchema
 import json
 
 
@@ -16,7 +16,8 @@ def user_info_validator(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
         try:
-            user.CreateSchema().load(json.loads(request.data))
+            print(f"{request.data}")
+            CreateSchema().load(json.loads(request.data))
 
         except ValidationError as err:
             return jsonify(err.messages), status.HTTP_409_CONFLICT

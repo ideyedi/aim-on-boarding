@@ -69,4 +69,13 @@ def create_app():
 
 
 def register_db():
-    me.connect("ob-connect", host=DevelopConfig.mongoUrl)
+    """
+    MongoEngine 셋업
+    :return:
+    """
+    try:
+        me.connect(host=DevelopConfig.mongo_url)
+    except ConnectionError:
+        print(f"{str(ConnectionError)}")
+    except Exception as e:
+        print(f"{str(e)}")
