@@ -18,7 +18,7 @@ class UserView(FlaskView):
                 status.HTTP_200_OK)
 
     @route("", methods=["POST"])
-    #@user_info_validator
+    @user_info_validator
     def sing_up(self):
         """
         request data type

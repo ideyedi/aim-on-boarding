@@ -16,7 +16,7 @@ def user_info_validator(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
         try:
-            print(f"{request.data}")
+            print(f"{__name__}{request.data}")
             CreateSchema().load(json.loads(request.data))
 
         except ValidationError as err:
