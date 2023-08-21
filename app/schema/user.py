@@ -35,8 +35,28 @@ class CreateSchema(Schema):
 
     @validates_schema
     def validate_create_user(self, data,  **kwargs):
+        print(f"marshmallow validation check")
         pass
 
 
-class InfoSchema(Schema):
-    pass
+class LoginSchema(Schema):
+    # 몽고가 관리하는 _id 값도 가지고 오고 싶은데.
+    _id = fields.Str(unique=True)
+    user_id = fields.Str(required=True, unique=True)
+    user_password = fields.Str(required=True)
+
+    @post_load
+    def make_model(self, data, **kwargs):
+        queryset_user = User.objects(user_id=data["user_id"])
+
+        if not queryset_user:
+            return False
+
+        #print(queryset_user.first()["_id"])
+        if not bcrypt.checkpw(data["user_password"].encode("UTF-8"),
+                              queryset_user.first()["user_password"].encode("UTF-8")):
+            # error handling을 좀더 graceful하게 정리했으면 ..
+            return False
+
+        return User(**data)
+

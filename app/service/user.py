@@ -37,9 +37,9 @@ class UserService:
         model_user = User(user_id=self.dao_user["user_id"],
                           user_password=self.dao_user["user_password"],
                           is_admin=self.dao_user["is_admin"])
-        #ret = model_user.save()
+        ret = model_user.save()
         #print(ret)
-        pass
+        return status.HTTP_200_OK
 
     @classmethod
     def log_in(cls):

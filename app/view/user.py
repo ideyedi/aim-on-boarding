@@ -6,7 +6,7 @@ from flask_classful import FlaskView, route
 from flask_api import status
 
 from app.service.user import user_info_validator, UserService
-from app.schema.user import CreateSchema
+from app.schema.user import CreateSchema, LoginSchema
 
 
 class UserView(FlaskView):
@@ -39,12 +39,12 @@ class UserView(FlaskView):
             return ("Login Failed",
                     ret)
 
-        return ("OK",
-                status.HTTP_200_OK)
+        return "OK", ret
 
     @route("login", methods=["POST"])
     def log_in(self):
-        print(f"{request}")
-        print(f"{request.data}")
+        login_user = LoginSchema().load(json.loads(request.data))
+        print(login_user)
+
         return ("OK",
                 status.HTTP_200_OK)

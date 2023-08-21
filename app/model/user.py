@@ -1,3 +1,4 @@
+import bcrypt
 import mongoengine as me
 
 
@@ -6,16 +7,12 @@ class User(me.Document):
     user_password = me.StringField(required=True, max_length=100)
     is_admin = me.BooleanField(default=False)
 
-
-class Authorization(me.Document):
-    user_token = me.StringField(required=True)
-
-    @classmethod
-    def create(cls, user_id, is_admin):
+    def validate_pw(self, input_password):
         """
-        일단 용도 파악이 우선
-        :param user_id:
-        :param is_admin:
-        :return:
+        Log-in 기능에서 패스워드 확인
+        :param input_password: 로그인 시 요청으로 인입된 패스워드 값
+        :return: Boolean
         """
+        print(bcrypt.checkpw(input_password.encode("UTF-8"),
+                             self.user_password.encode("UTF-8")))
         pass
