@@ -1,6 +1,10 @@
 import bcrypt
 
-from marshmallow import fields, Schema, post_load, validates_schema
+from flask import jsonify
+from marshmallow import fields, Schema, post_load
+from marshmallow import ValidationError, validates_schema
+from flask_api import status
+
 from app.model.user import User
 
 
@@ -12,7 +16,7 @@ class CreateSchema(Schema):
     @post_load
     def create_user(self, data, **kwargs):
         """
-        유저 생성 시 패스워드 암호화 로직
+        유저 생성 시 패스워드 암호화
         :param data:
         :return:
         """
@@ -31,7 +35,6 @@ class CreateSchema(Schema):
 
     @validates_schema
     def validate_create_user(self, data,  **kwargs):
-        print(f"D: {data}")
         pass
 
 

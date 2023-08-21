@@ -1,9 +1,11 @@
 import json
 
 from flask import request
+from flask_apispec import marshal_with
 from flask_classful import FlaskView, route
 from flask_api import status
-from app.service.user import user_info_validator
+
+from app.service.user import user_info_validator, UserService
 from app.schema.user import CreateSchema
 
 
@@ -18,6 +20,7 @@ class UserView(FlaskView):
                 status.HTTP_200_OK)
 
     @route("", methods=["POST"])
+    #@marshal_with(CreateSchema)
     @user_info_validator
     def sing_up(self):
         """
@@ -25,15 +28,17 @@ class UserView(FlaskView):
         Content-Type: application/json
         Data-Raw JSON
         """
-        print(f"id: {request.get_json()}")
         user = CreateSchema().load(json.loads(request.data))
         if user is False:
             return ("Error",
                     status.HTTP_409_CONFLICT)
 
-        # 그냥 스키마 객체를 저장하면 바로 연결된 몽고에 들어가네
-        # 진짜 편하게 잘 만들어짐..
-        user.save()
+        user_service = UserService(user)
+        ret = user_service.sign_up()
+        if ret is not status.HTTP_200_OK:
+            return ("Login Failed",
+                    ret)
+
         return ("OK",
                 status.HTTP_200_OK)
 
