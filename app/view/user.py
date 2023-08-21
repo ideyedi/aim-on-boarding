@@ -46,5 +46,8 @@ class UserView(FlaskView):
         login_user = LoginSchema().load(json.loads(request.data))
         print(login_user)
 
-        return ("OK",
+        user_service = UserService(login_user)
+        tokens = user_service.log_in()
+
+        return (tokens,
                 status.HTTP_200_OK)

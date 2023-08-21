@@ -28,8 +28,7 @@ class CreateSchema(Schema):
             ).decode("UTF-8")
 
             data["user_password"] = password
-            user = User(**data)
-            return user
+            return User(**data)
 
         return False
 
