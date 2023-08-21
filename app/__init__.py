@@ -6,7 +6,6 @@ from flask_api import status
 from flask_swagger_ui import get_swaggerui_blueprint
 
 from app.view.user import UserView
-from app.route.user import blueprint as user_bp
 
 import os
 import json
@@ -19,11 +18,6 @@ SWAGGER_URL = "/swagger-ui"
 
 def create_app():
     app = Flask(__name__)
-
-    app.config['DATA_DIR'] = "static/"
-    app.config["MONGODB_SETTINGS"] = {
-        "db": "on_boarding"
-    }
 
     CORS(send_wildcard=True,
          resources={r'*': {'origins': '*'}},
