@@ -3,6 +3,7 @@ import mongoengine as me
 
 
 class User(me.Document):
+    _id = me.DictField()
     user_id = me.StringField(required=True, max_length=100, unique=True)
     user_password = me.StringField(required=True, max_length=100)
     is_admin = me.BooleanField(default=False)
