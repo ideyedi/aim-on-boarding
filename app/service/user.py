@@ -65,10 +65,11 @@ class UserService:
                           user_password=self.dao_user["user_password"],
                           is_admin=self.dao_user["is_admin"])
         ret = model_user.save()
-        print(ret)
         return status.HTTP_200_OK
 
     def log_in(self):
+
+        # 토큰 생성 전 유효한 유저인지 확인이 필요함.
         access_token = self._create_access_token(
             self.dao_user["user_id"], self.dao_user["is_admin"]
         )
