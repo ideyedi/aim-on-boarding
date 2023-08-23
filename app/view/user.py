@@ -60,6 +60,10 @@ class UserView(FlaskView):
     @route("login", methods=["POST"])
     def log_in(self):
         login_user = LoginSchema().load(json.loads(request.data))
+        if not login_user:
+            return ("Not Founded User-info",
+                    status.HTTP_204_NO_CONTENT)
+        # 패스워드가 안맞는 경우는 unauthorized가 발생해야되긴 한데 ..
         user_service = UserService(login_user)
         tokens = user_service.log_in()
 

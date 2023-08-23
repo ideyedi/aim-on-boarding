@@ -32,9 +32,8 @@ def user_info_validator(func):
 
 
 class UserService:
-    def __init__(self, req: Dict[str, Any]):
+    def __init__(self, req: Dict[str, Any], input_pw):
         self.dao_user = req
-        print(self.dao_user["user_id"])
 
     @classmethod
     def _create_access_token(cls, user_id: str, is_admin: bool, expire_time=None):
@@ -68,8 +67,6 @@ class UserService:
         return status.HTTP_200_OK
 
     def log_in(self):
-
-        # 토큰 생성 전 유효한 유저인지 확인이 필요함.
         access_token = self._create_access_token(
             self.dao_user["user_id"], self.dao_user["is_admin"]
         )
