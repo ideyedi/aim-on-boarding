@@ -32,7 +32,7 @@ def user_info_validator(func):
 
 
 class UserService:
-    def __init__(self, req: Dict[str, Any], input_pw):
+    def __init__(self, req: Dict[str, Any]):
         self.dao_user = req
 
     @classmethod
