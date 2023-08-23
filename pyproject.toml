@@ -22,8 +22,9 @@ bcrypt = "^4.0.1"
 werkzeug = "2.1.2"
 pyjwt = "^2.8.0"
 funcy = "^2.0"
-marshmallow-enum = "^1.5.1"
-marshmallow-oneofschema = "^3.0.1"
+pytest = "^7.4.0"
+mongomock = "^4.1.2"
+factory-boy = "^3.3.0"
 
 
 [build-system]
