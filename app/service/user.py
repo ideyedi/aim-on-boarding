@@ -1,5 +1,6 @@
 import json
 import jwt
+import bcrypt
 
 from flask import request, jsonify
 from flask_api import status
@@ -32,7 +33,7 @@ def user_info_validator(func):
 
 
 class UserService:
-    def __init__(self, req: Dict[str, Any]):
+    def __init__(self, req: User):
         self.dao_user = req
 
     @classmethod
@@ -60,24 +61,26 @@ class UserService:
         return token
 
     def sign_up(self):
-        model_user = User(user_id=self.dao_user["user_id"],
-                          user_password=self.dao_user["user_password"],
-                          is_admin=self.dao_user["is_admin"])
-        ret = model_user.save()
+        ret = self.dao_user.save()
+        print(ret)
         return status.HTTP_200_OK
 
-    def log_in(self):
-        access_token = self._create_access_token(
-            self.dao_user["user_id"], self.dao_user["is_admin"]
-        )
+    def log_in(self, input_pw):
+        # invalid check 기능 위치 변경
+        if not bcrypt.checkpw(input_pw.encode("UTF-8"),
+                              self.dao_user.user_password.encode("UTF-8")):
+            return False
 
+        access_token = self._create_access_token(
+            self.dao_user.user_id, self.dao_user.is_admin
+        )
         refresh_token = self._create_access_token(
-            self.dao_user["user_id"], self.dao_user["is_admin"]
+            self.dao_user.user_id, self.dao_user.is_admin
         )
         tokens_dict: Dict = {"access_token": access_token,
                              "refresh_token": refresh_token}
 
-        return jsonify(tokens_dict)
+        return tokens_dict
 
     def modify(self, password: str = None, is_admin: bool = None):
         """

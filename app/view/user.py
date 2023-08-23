@@ -63,9 +63,18 @@ class UserView(FlaskView):
         if not login_user:
             return ("Not Founded User-info",
                     status.HTTP_204_NO_CONTENT)
-        # 패스워드가 안맞는 경우는 unauthorized가 발생해야되긴 한데 ..
+
+        try:
+            input_password = json.loads(request.data)["user_password"]
+        except KeyError:
+            return ("Conflict password",
+                    status.HTTP_401_UNAUTHORIZED)
+
         user_service = UserService(login_user)
-        tokens = user_service.log_in()
+        tokens = user_service.log_in(input_password)
+        if not tokens:
+            return ("Invalid password",
+                    status.HTTP_401_UNAUTHORIZED)
 
         return (tokens,
                 status.HTTP_200_OK)

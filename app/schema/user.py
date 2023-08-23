@@ -56,11 +56,7 @@ class LoginSchema(Schema):
             # 해당하는 id가 없을 경우 바로 Error return
             return False
 
-        if not bcrypt.checkpw(data["user_password"].encode("UTF-8"),
-                              queryset_user.first()["user_password"].encode("UTF-8")):
-            return False
-
-        return User(**data)
+        return queryset_user.first()
 
 
 class ModifySchema(Schema):
