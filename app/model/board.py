@@ -4,7 +4,10 @@ from app.model.user import User
 
 
 class Board(me.document):
-    name = me.StringField()
-    description = me.StringField()
-    # 이러면 자료구조로 가지고 있고 추가적인 참조를 하지 않으려나
-    admin = me.EmbeddedDocumentField(User)
+    _id = me.Document
+    name = me.StringField(required=True)
+    description = me.StringField(max_length=500)
+    admin = me.EmbeddedDocumentField(User.user_id)
+
+    def __repr__(self):
+        return f"<Board(_id={self._id}\r name={self.name}\r desc={self.description})>"

@@ -50,27 +50,3 @@ def register_db():
         print(f"{str(ConnectionError)}")
     except Exception as e:
         print(f"{str(e)}")
-
-
-def register_apidocs(bp, title="On-boarding", version="v0.0.1"):
-    global_params = [{"description": "호스트 언어(ko, en, vi, ja)", "in": "query", "name": "hl", "schema": {"type": "string"}}, {"description": "국가(kr, us, vn, jp)", "in": "query", "name": "cr", "schema": {"type": "string"}}]
-
-    print(__name__)
-    from core import generate_api_spec
-    from flask import render_template, url_for
-
-    def get_api_spec_url():
-        if isinstance(bp, Blueprint):
-            return url_for(f"{bp.name}.apispec")
-        else:
-            return url_for("apispec")
-
-    # pylint: disable=unused-variable
-    @bp.route("/apispec")
-    def apispec():
-        return jsonify(generate_api_spec(title=title, version=version, bp_name=bp.name if isinstance(bp, Blueprint) else None, global_params=global_params))
-
-    @bp.route("/api")
-    def swagger():
-        print("ideyedi")
-        return render_template("swagger-ui.html", spec_url=get_api_spec_url())
