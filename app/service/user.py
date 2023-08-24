@@ -103,3 +103,6 @@ class UserService:
         model_user.save()
 
         return __name__
+
+    def show_info(self):
+        pass

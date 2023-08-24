@@ -17,3 +17,6 @@ class User(me.Document):
         print(bcrypt.checkpw(input_password.encode("UTF-8"),
                              self.user_password.encode("UTF-8")))
         pass
+
+    def __repr__(self):
+        return f"<User(_id={self._id}.\r user_id={self.user_id})>"

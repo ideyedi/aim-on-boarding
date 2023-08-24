@@ -75,3 +75,20 @@ class ModifySchema(Schema):
         user = json.loads(queryset_user.first().to_json())
 
         return User(**user)
+
+
+class InfoSchema(UserSchema):
+    #class Meta:
+    #    fields = ["user_id"]
+    #    exclude = ("user_password", "is_admin")
+
+    expire = fields.DateTime()
+
+    @post_load()
+    def make_object(self, data, **kwargs):
+        queryset = User.objects(user_id=data["user_id"])
+        if not queryset:
+            return False
+
+        print(f"{__name__}/post_load")
+        return User(**queryset.first())
