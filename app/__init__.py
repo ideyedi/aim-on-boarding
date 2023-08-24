@@ -9,7 +9,7 @@ from config import DevelopConfig
 
 
 def create_app():
-    app = Flask(__name__, static_folder="static", template_folder="templates")
+    app = Flask(__name__)
 
     app.config.update({"APISPEC_SPEC": DevelopConfig.APISPEC_SPEC,
                        "APISPEC_SWAGGER_URL": DevelopConfig.APISPEC_SWAGGER_URL,
@@ -24,12 +24,9 @@ def create_app():
          resources={r'*': {'origins': '*'}},
          expose_headers=["content-disposition"],
          max_age=6000).init_app(app)
-    #
-    register_db()
-    #UserView.register(app, route_base="/user")
-    route_extension(app)
 
-    print(app.url_map)
+    register_db()
+    route_extension(app)
 
     @app.route("/actuator")
     def heath_check():
