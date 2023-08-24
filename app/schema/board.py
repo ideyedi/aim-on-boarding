@@ -1,20 +1,26 @@
-import json
-
 from marshmallow import fields, Schema
 from marshmallow import validates_schema
 
-from app.model.board import Board
-
 
 class BoardSchema(Schema):
-    name = fields.Str(required=True)
+    name = fields.Str()
     description = fields.Str()
-    admin = fields.Str(required=True)
 
 
 class BoardCreateSchema(BoardSchema):
 
     @validates_schema
     def validate_creation(self):
-        print("{__name__}")
+        print(self.name)
+        print(self.description)
         pass
+
+
+class BoardInfoSchema(BoardSchema):
+    admin = fields.Str(required=True)
+
+    @validates_schema
+    def validate_info(self):
+        print(f"{self.__name__}")
+        pass
+
