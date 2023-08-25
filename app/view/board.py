@@ -17,7 +17,7 @@ class BoardView(FlaskView):
         return ("Board healthCheck",
                 status.HTTP_200_OK)
 
-    @doc(summary="Board feature, 게시판 생성", description="게시판 생성 endpoint")
+    @doc(summary="Board feature", description="게시판 생성")
     @route("", methods=["POST"])
     @check_access_token
     @use_kwargs(BoardCreateSchema, location="json_or_form", inherit=True, apply=False)
@@ -34,7 +34,27 @@ class BoardView(FlaskView):
                            status.HTTP_400_BAD_REQUEST)
 
         board_service = BoardService(in_board)
-        board_service.create_board()
-        print(kwargs)
+        # Board 관리자 지정
+        board_service.admin = kwargs["user_id"]
+
+        ret = board_service.create_board()
+        print(f"{__name__}{ret}")
         return ("Create board",
+                status.HTTP_200_OK)
+
+    @doc(summary="Board feature", description="게시판 삭제")
+    @route("", methods=["DELETE"])
+    @check_access_token
+    @use_kwargs(BoardDeleteSchema, location="json_or_form", inherit=True, apply=False)
+    def delete_board(self, **kwargs):
+        in_board = BoardDeleteSchema().load(request.get_json())
+        if in_board is False:
+            raise ApiError("Create failed",
+                           status.HTTP_400_BAD_REQUEST)
+
+        board_service = BoardService(in_board)
+        board_service.admin = kwargs["user_id"]
+        ret = board_service.delete_board()
+        print(f"{__name__} {ret}")
+        return ("Delete board",
                 status.HTTP_200_OK)

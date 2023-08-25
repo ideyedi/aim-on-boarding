@@ -18,14 +18,22 @@ class BoardCreateSchema(BoardSchema):
     admin = fields.Str(default="admin")
 
     @validates_schema
-    def validate_creation(self, data, **kwargs):
+    def validate_create(self, data, **kwargs):
         # location 'query' 일 경우 self.context
         # location이 'json_or_form' 일 경우 ??
         # apply=False인 경우 schema validata를 하지 않네..
         print(self.context)
         print(f"{__name__}, Data: {data}")
-        if False:
-            raise ValidationError("Valid Test")
+        pass
+
+
+class BoardDeleteSchema(BoardSchema):
+    id = fields.String(attribute="_id")
+
+    @validates_schema
+    def validate_delete(self, data, **kwargs):
+        if id is 0:
+            raise ValidationError("Not Founded board-id")
 
 
 class BoardInfoSchema(BoardSchema):

@@ -29,3 +29,16 @@ def check_access_token(func):
         return func(*args, **kwargs)
 
     return decorator
+
+
+def check_refresh_token(func):
+    """
+    OAuth2.0 Refresh token Decorator
+    :param func:
+    :return:
+    """
+    @wraps(func)
+    def decorator(*args, **kwargs):
+        return func(*args, **kwargs)
+
+    return decorator
