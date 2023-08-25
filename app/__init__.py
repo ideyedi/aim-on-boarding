@@ -1,9 +1,8 @@
 import mongoengine as me
-from flask import Flask, Blueprint, jsonify
+from flask import Flask
 from flask_cors import CORS
 from flask_api import status
 
-from app.view.user import UserView
 from app.view import route_extension
 from config import DevelopConfig
 

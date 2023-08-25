@@ -1,26 +1,38 @@
-from marshmallow import fields, Schema
-from marshmallow import validates_schema
+from marshmallow import fields, Schema, post_load
+from marshmallow import validates_schema, ValidationError
+
+from app.model.board import Board
 
 
 class BoardSchema(Schema):
-    name = fields.Str()
+    __model__ = Board
+    board_name = fields.Str(required=True)
     description = fields.Str()
+
+    @post_load
+    def make_object(self, data, **kwargs):
+        return self.__model__(**data)
 
 
 class BoardCreateSchema(BoardSchema):
+    admin = fields.Str(default="admin")
 
     @validates_schema
-    def validate_creation(self):
-        print(self.name)
-        print(self.description)
-        pass
+    def validate_creation(self, data, **kwargs):
+        # location 'query' 일 경우 self.context
+        # location이 'json_or_form' 일 경우 ??
+        # apply=False인 경우 schema validata를 하지 않네..
+        print(self.context)
+        print(f"{__name__}, Data: {data}")
+        if False:
+            raise ValidationError("Valid Test")
 
 
 class BoardInfoSchema(BoardSchema):
     admin = fields.Str(required=True)
 
     @validates_schema
-    def validate_info(self):
+    def validate_info(self, data, **kwargs):
         print(f"{self.__name__}")
         pass
 
