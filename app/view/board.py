@@ -58,3 +58,15 @@ class BoardView(FlaskView):
         print(f"{__name__} {ret}")
         return ("Delete board",
                 status.HTTP_200_OK)
+
+    @doc(summary="Board feature", description="게시판 수정")
+    @route("", methods=["PATCH"])
+    @check_access_token
+    @use_kwargs(BoardInfoSchema(only=["board_name"]), location="query")
+    def modify_board(self, board_name, **kwargs):
+        print(board_name.board_name)
+        # 이름과 관리자에 해당하는 데이터를 로드, 해당되는 아이디 찾기
+        # 근데 아이디가 의미가 있나 싶긴 해
+        #in_board = BoardInfoSchema().load()
+        return ("Modify board",
+                status.HTTP_200_OK)

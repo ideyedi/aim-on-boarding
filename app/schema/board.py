@@ -37,10 +37,11 @@ class BoardDeleteSchema(BoardSchema):
 
 
 class BoardInfoSchema(BoardSchema):
-    admin = fields.Str(required=True)
+    id = fields.String(attribute="_id")
+    admin = fields.Str()
 
     @validates_schema
     def validate_info(self, data, **kwargs):
-        print(f"{self.__name__}")
+        print(f"{__name__}")
         pass
 

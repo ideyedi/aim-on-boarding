@@ -27,7 +27,13 @@ class BoardService:
         return True
 
     def modify_board(self):
-        pass
+        print(self._board.board_name)
+        # 해당되는 첫번째 데이터를 수정
+        ret = Board.objects(board_name=self._board.board_name,
+                            admin=self._board.admin).first()
+        print(type(ret))
+
+        return True
 
     def delete_board(self):
         print(self._board.board_name)

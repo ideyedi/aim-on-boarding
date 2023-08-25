@@ -25,7 +25,7 @@ def check_access_token(func):
         '''
 
         kwargs = ret
-
+        #print(f"{__bane__} : args:{args} \n kwargs: {kwargs}")
         return func(*args, **kwargs)
 
     return decorator
