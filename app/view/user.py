@@ -21,11 +21,8 @@ class UserView(FlaskView):
         return ("HeathCheck",
                 status.HTTP_200_OK)
 
-    shae = 2
-    doc_string = f"{shae}, parameter 보이지 않는 문제 확인 필요"
-
     @route("", methods=["POST"])
-    @doc(description=doc_string, summary="USER Feature 회원가입")
+    @doc(description="user sign-up", summary="USER Feature 회원가입")
     @user_info_validator
     @use_kwargs(UserSchema, location="json")
     def sing_up(self):
