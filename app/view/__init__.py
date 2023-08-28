@@ -3,6 +3,7 @@ from flask_swagger_ui import get_swaggerui_blueprint
 
 from app.view.user import UserView
 from app.view.board import BoardView
+from app.view.post import PostView
 from config import DevelopConfig
 
 route_bp = Blueprint("route", __name__)
@@ -11,6 +12,7 @@ route_bp = Blueprint("route", __name__)
 def route_extension(app: Flask):
     UserView.register(route_bp, route_base="/user")
     BoardView.register(route_bp, route_base="/board")
+    PostView.register(route_bp, route_base="/post")
 
     # 문서화를 위한 apispec 생성
     register_swagger(route_bp)
