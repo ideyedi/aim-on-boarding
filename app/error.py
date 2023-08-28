@@ -3,7 +3,7 @@ from marshmallow import Schema, fields
 
 class ApiErrorSchema(Schema):
     status_code = fields.Integer(data_key="code", required=True)
-    error_messages = fields.String
+    error_messages = fields.Str()
 
 
 class ApiError(Exception):
