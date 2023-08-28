@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, Flask, url_for
 from flask_swagger_ui import get_swaggerui_blueprint
 
 from app.view.user import UserView
+from app.view.board import BoardView
 from config import DevelopConfig
 
 route_bp = Blueprint("route", __name__)
@@ -9,8 +10,11 @@ route_bp = Blueprint("route", __name__)
 
 def route_extension(app: Flask):
     UserView.register(route_bp, route_base="/user")
-    # apispec 생성
+    BoardView.register(route_bp, route_base="/board")
+
+    # 문서화를 위한 apispec 생성
     register_swagger(route_bp)
+
     app.register_blueprint(route_bp)
 
     # swagger-ui

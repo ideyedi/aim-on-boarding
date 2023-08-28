@@ -1,5 +1,6 @@
 # pytest를 위한 공용 fixture 모음
 import pytest
+import mongomock
 
 from flask import current_app
 from config import DevelopConfig
@@ -19,11 +20,7 @@ def fixture_client(fixture_app):
     return client
 
 
-@pytest.fixture(scope="function", autouse=True)
-def db(app):
-    import mongoengine
-
-    mongoengine.connect(host=DevelopConfig.mongo_url)
-    # or sleep?
-    yield
-    mongoengine.disconnect()
+@pytest.fixture()
+def mock_mongo_client():
+    # mongomock을 이용하여 가상의 MongoDB 클라이언트를 생성합니다.
+    return mongomock.MongoClient()

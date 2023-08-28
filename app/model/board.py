@@ -1,10 +1,14 @@
 import mongoengine as me
 
-from app.model.user import User
+
+class EmbedUser(me.EmbeddedDocument):
+    user_id = me.StringField(required=True)
 
 
-class Board(me.document):
-    name = me.StringField()
-    description = me.StringField()
-    # 이러면 자료구조로 가지고 있고 추가적인 참조를 하지 않으려나
-    admin = me.EmbeddedDocumentField(User)
+class Board(me.Document):
+    board_name = me.StringField(required=True, max_length=100)
+    description = me.StringField(max_length=500)
+    admin = me.EmbeddedDocumentField(EmbedUser)
+
+    def __repr__(self):
+        return f"<Board(name={self.board_name}, desc={self.description})>"

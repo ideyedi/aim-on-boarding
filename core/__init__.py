@@ -110,7 +110,7 @@ def _get_bp_name(endpoint: str) -> Optional[str]:
 def generate_api_spec(title=None, version=None, bp_name=None, global_params=None) -> dict:
     from flask_apispec.paths import rule_to_path
     from config import DevelopConfig
-
+    # Config 정리시 수정 필요
     spec = DevelopConfig.APISPEC_SPEC
 
     converter = ApiDocConverter(current_app, spec)
@@ -120,12 +120,10 @@ def generate_api_spec(title=None, version=None, bp_name=None, global_params=None
         if endpoint_bp_name != bp_name:
             continue
 
-        print(f"{view_func}")
-
+        print(view_func)
         if hasattr(view_func, "__apispec__"):
             # noinspection PyProtectedMember
             rule = current_app.url_map._rules_by_endpoint[endpoint][0]
-            print("2")
             spec.path(
                 view=view_func,
                 path=rule_to_path(rule),
