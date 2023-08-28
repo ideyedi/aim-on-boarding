@@ -1,3 +1,5 @@
+import json
+
 from flask import request
 from flask_apispec import doc, use_kwargs, marshal_with
 from flask_classful import FlaskView, route
@@ -29,6 +31,7 @@ class BoardView(FlaskView):
 
         # 스키마 생성하면서 검증 로직 태움
         in_board = BoardCreateSchema().load(request.get_json())
+        print(type(request.get_json()), request.get_json())
         if in_board is False:
             raise ApiError("Create failed",
                            status.HTTP_400_BAD_REQUEST)
@@ -39,6 +42,8 @@ class BoardView(FlaskView):
 
         ret = board_service.create_board()
         print(f"{__name__}{ret}")
+        print(board_service.name, board_service.description)
+
         return ("Create board",
                 status.HTTP_200_OK)
 
@@ -62,11 +67,23 @@ class BoardView(FlaskView):
     @doc(summary="Board feature", description="게시판 수정")
     @route("", methods=["PATCH"])
     @check_access_token
-    @use_kwargs(BoardInfoSchema(only=["board_name"]), location="query")
-    def modify_board(self, board_name, **kwargs):
-        print(board_name.board_name)
-        # 이름과 관리자에 해당하는 데이터를 로드, 해당되는 아이디 찾기
-        # 근데 아이디가 의미가 있나 싶긴 해
-        #in_board = BoardInfoSchema().load()
+    @use_kwargs(BoardInfoSchema(), location="query")
+    def modify_board(self, model_board, **kwargs):
+        board_service = BoardService(model_board)
+
+        if not kwargs["user_id"]:
+            # Error handler에서 아에 서비스가 죽어버리면 안됨.. 처리 필요
+            return ApiError("Unauthorized User",
+                           status_code=status.HTTP_401_UNAUTHORIZED)
+        else:   # Debug
+            print(kwargs["user_id"])
+
+        board_service.admin = kwargs["user_id"]
+        ret = board_service.modify_board()
+
+        if not ret:
+            return ("Couldn't modified data",
+                    status.HTTP_405_METHOD_NOT_ALLOWED)
+
         return ("Modify board",
                 status.HTTP_200_OK)
