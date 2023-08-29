@@ -3,6 +3,7 @@ from app.model.board import Board
 from app.model.user import User
 
 from datetime import datetime
+from typing import List
 
 
 class PostService:
@@ -21,10 +22,21 @@ class PostService:
 
         self._post_model.board = board_model
         self._post_model.author = Author(user_id=user_model.user_id)
-
-        print(user_id)
+        self._post_model.like = []
         ret = self._post_model.save()
         print(f"{__name__}, {ret}, {self._post_model.board.board_name}")
 
         return True
 
+    def add_like(self, post_id, user_id):
+        self._post_model = Post.objects(id=post_id).first()
+
+        like_user = User.objects.get(user_id=user_id)
+        print(like_user.user_id, type(like_user))
+        self._post_model.like.append(like_user)
+        print(self._post_model.like)
+        # list 이길
+        # 누른 유저가 누구 인지 관리 되어야 함
+
+        self._post_model.save()
+        return True

@@ -29,6 +29,8 @@ class PostView(FlaskView):
             raise ApiError("Failed to create post",
                            status.HTTP_400_BAD_REQUEST)
 
+        # 요 시리얼라이즈 부분을 좀 나이스하게 바꿀순 없을까?
+        # 결국 board 정보를 같은 form으로 전달받아서 요런 재작업을 해줘야하는데
         post_model = Post()
         post_model.title = kwargs["title"]
         post_model.content = kwargs["content"]
@@ -37,5 +39,18 @@ class PostView(FlaskView):
         print(post_model.__repr__())
         post_service = PostService(post_model)
         ret = post_service.creat_post(kwargs["board_title"], user_id)
+        if not ret:
+            raise ApiError("",
+                           status_code=status.HTTP_409_CONFLICT)
 
-        return "TEMP"
+        return ("Create Post",
+                status.HTTP_200_OK)
+
+    @doc(summary="Post feature", description="포스트 좋아요 추가")
+    @route("/like", methods=["POST"])
+    @check_access_token
+    @use_kwargs({"post_id": fields.String(required=True)}, location="query")
+    def like_post(self, post_id, **kwargs):
+        post_service = PostService(Post())
+        ret = post_service.add_like(post_id, kwargs["user_id"])
+        pass

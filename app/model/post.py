@@ -8,7 +8,7 @@ class Author(me.EmbeddedDocument):
     user_id = me.StringField()
 
     def __repr__(self):
-        return f"<_id: {self._id}, user_id: {self.user_id}>"
+        return f"<Author user_id: {self.user_id}>"
 
 
 class Post(me.Document):
@@ -18,7 +18,7 @@ class Post(me.Document):
     create_time = me.DateTimeField()
     # 단순히 integer만 관리할 경우 내가 누른 좋아요 판단이 불가능
     # linking 구조로 변경
-    like = me.LazyReferenceField(User)
+    like = me.ListField(me.ReferenceField(User))
     author = me.EmbeddedDocumentField(Author)
     board = me.ReferenceField(Board)
 

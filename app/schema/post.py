@@ -7,7 +7,7 @@ from app.model.board import Board
 
 class PostSchema(Schema):
     __model__ = Post
-    title = fields.Str(required=True)
+    board_id = fields.Dict
 
     @post_load
     def make_object(self, data, **kwargs):
