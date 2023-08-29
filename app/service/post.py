@@ -11,8 +11,6 @@ class PostService:
         self._post_model = post
 
     def creat_post(self, board_title: str, user_id: str) -> bool:
-        self._post_model.create_time = datetime.now().utcnow()
-
         board_model = Board.objects(board_name=board_title).first()
         if board_model is False:
             print("[Debug], 해당되는 게시판 정보를 가지고 오지 못함")

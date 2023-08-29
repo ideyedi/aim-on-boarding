@@ -17,8 +17,8 @@ class Post(me.Document):
     title = me.StringField(required=True)
     content = me.StringField()
     hashtag = me.StringField()
-    # Create Time은 처음 생성시만 넣고 건들지 않음
-    create_time = me.DateTimeField()
+
+    create_time = me.DateTimeField(default=datetime.now().utcnow())
     modified_time = me.DateTimeField(default=datetime.now().utcnow())
     # 단순히 integer만 관리할 경우 내가 누른 좋아요 판단이 불가능
     # linking 구조로 변경
