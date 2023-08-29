@@ -3,7 +3,9 @@ import mongoengine as me
 
 
 class User(me.Document):
-    _id = me.DictField()
+    # MongoEngine Model에 직접 _id를 설정하게 되면
+    # 개발자가 직접 컨트롤하는 것으로 인식해버림
+    # 데이터를 쓸때 _id 값 Validation Failed 되어 버림
     user_id = me.StringField(required=True, max_length=100, unique=True)
     user_password = me.StringField(required=True, max_length=100)
     is_admin = me.BooleanField(default=False)
@@ -19,4 +21,4 @@ class User(me.Document):
         pass
 
     def __repr__(self):
-        return f"<User(_id={self._id}.\r user_id={self.user_id})>"
+        return f"<User user_id={self.user_id}, is_admin={self.is_admin})>"
