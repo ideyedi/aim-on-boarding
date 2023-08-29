@@ -53,4 +53,39 @@ class PostView(FlaskView):
     def like_post(self, post_id, **kwargs):
         post_service = PostService(Post())
         ret = post_service.add_like(post_id, kwargs["user_id"])
-        pass
+
+        return ("Like post",
+                status.HTTP_200_OK)
+
+    @doc(summary="Post feature", descripiton="포스트 삭제")
+    @route("", methods=["DELETE"])
+    @check_access_token
+    @use_kwargs({"post_id": fields.String(required=True)}, location="query")
+    def delete(self, post_id, **kwargs):
+        #print(f"{post_id}, {kwargs}")
+        post_service = PostService(Post())
+        ret = post_service.delete_post(post_id, kwargs["user_id"])
+        if not ret:
+            raise ApiError("",
+                           status_code=status.HTTP_400_BAD_REQUEST)
+
+        return ("Delete post",
+                status.HTTP_200_OK)
+
+    @doc(summary="Post feature", description="포스트 수정")
+    @route("", methods=["PUT"])
+    @check_access_token
+    @use_kwargs(PostInfoSchema, location="query")
+    def put(self, *args, **kwargs):
+        #print(args)
+        post_service = PostService(args[0][0])
+        post_id = args[0][1]
+        print(post_service, post_id)
+        print(kwargs["user_id"])
+        ret = post_service.modify_post(post_id, kwargs["user_id"])
+        if not ret:
+            raise ApiError("",
+                           status_code=status.HTTP_400_BAD_REQUEST)
+
+        return ("Modified post",
+                status.HTTP_200_OK)

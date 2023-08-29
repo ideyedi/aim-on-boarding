@@ -1,5 +1,7 @@
 import mongoengine as me
 
+from datetime import datetime
+
 from app.model.board import Board
 from app.model.user import User
 
@@ -15,7 +17,9 @@ class Post(me.Document):
     title = me.StringField(required=True)
     content = me.StringField()
     hashtag = me.StringField()
+    # Create Time은 처음 생성시만 넣고 건들지 않음
     create_time = me.DateTimeField()
+    modified_time = me.DateTimeField(default=datetime.now().utcnow())
     # 단순히 integer만 관리할 경우 내가 누른 좋아요 판단이 불가능
     # linking 구조로 변경
     like = me.ListField(me.ReferenceField(User))
@@ -23,4 +27,4 @@ class Post(me.Document):
     board = me.ReferenceField(Board)
 
     def __repr__(self):
-        return f"<POST Model Title: {self.title}>"
+        return f"<POST Model Title: {self.title}, modified T: {self.modified_time}>"
