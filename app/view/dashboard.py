@@ -14,3 +14,38 @@ RFP
 내가 좋아요 한 포스트
 내가 쓴 댓글
 """
+
+from flask import g, request, jsonify
+from flask_apispec import doc, use_kwargs, marshal_with
+from flask_classful import FlaskView, route
+from flask_api import status
+
+from app.service.dashboard import DashboardService
+
+
+class DashBoardView(FlaskView):
+
+    @doc(tags=["DashBoard"], summary="DashBoard feature", description="health-check monitor")
+    @route("monitor", methods=["GET"])
+    def dashboard_monit(self):
+        return ("DashBoard health-check",
+                status.HTTP_200_OK)
+
+    @doc(tags=["DashBoard"], summary="DashBoard feature", description="Posts Likes-Top10")
+    @route("likes", methods=["GET"])
+    def likes_top10(self):
+        dash_service = DashboardService()
+        dash_service.get_likes_top10()
+        print(dash_service.result_posts)
+
+        return jsonify(dash_service.result_posts)
+
+    @doc(tags=["DashBoard"], summary="DashBoard feature", description="Posts Recent-Top10")
+    @route("recent", methods=["GET"])
+    def recent_top10(self):
+        pass
+
+    @doc(tags=["DashBoard"], summary="DashBoard feature", description="Posts Comments-Top10")
+    @route("comments", methods=["GET"])
+    def comments_top10(self):
+        pass
