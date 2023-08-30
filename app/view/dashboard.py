@@ -81,4 +81,5 @@ class DashBoardView(FlaskView):
     def my_likes_posts(self, **kwargs):
         dash_service = DashboardService()
         ret = dash_service.get_my_like_posts(kwargs["user_id"])
-        pass
+
+        return jsonify(dash_service.result_posts)

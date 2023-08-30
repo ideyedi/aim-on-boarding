@@ -96,6 +96,6 @@ class DashboardService:
         agg = Post.objects(like__contains=user_to_check)
         for item in agg:
             serialized_data = PostInfoSchema().dump(item)
-            print(serialized_data)
+            self.result_posts.append(serialized_data)
 
         return True
