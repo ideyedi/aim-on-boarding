@@ -43,7 +43,10 @@ class DashBoardView(FlaskView):
     @doc(tags=["DashBoard"], summary="DashBoard feature", description="Posts Recent-Top10")
     @route("recent", methods=["GET"])
     def recent_top10(self):
-        pass
+        dash_service = DashboardService()
+        dash_service.get_recent_top10()
+
+        return jsonify(dash_service.result_posts)
 
     @doc(tags=["DashBoard"], summary="DashBoard feature", description="Posts Comments-Top10")
     @route("comments", methods=["GET"])
