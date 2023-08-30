@@ -27,4 +27,4 @@ class Post(me.Document):
     board = me.ReferenceField(Board)
 
     def __repr__(self):
-        return f"<POST Model Title: {self.title}, modified T: {self.modified_time}>"
+        return f"<POST Model Title: {self.title}, like: {len(self.like)}>"

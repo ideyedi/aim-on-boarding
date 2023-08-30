@@ -25,7 +25,7 @@ class UserView(FlaskView):
     @doc(description="user sign-up", summary="USER Feature 회원가입")
     @user_info_validator
     @use_kwargs(UserSchema, location="json")
-    def sing_up(self):
+    def sing_up(self, **kwargs):
         """
         request data type
         Content-Type: application/json
