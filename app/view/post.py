@@ -11,13 +11,13 @@ from app.service.post import PostService
 
 class PostView(FlaskView):
 
-    @doc(summary="Post feature health-check")
+    @doc(tags=["Post"], summary="Post feature health-check")
     @route("monitor", methods=["GET"])
     def post_monit(self):
         return ("Post health-Check",
                 status.HTTP_200_OK)
 
-    @doc(summary="Post feature", description="포스트 작성")
+    @doc(tags=["Post"], summary="Post feature", description="포스트 작성")
     @route("", methods=["POST"])
     @check_access_token
     @use_kwargs(PostCreateSchema, location="json_or_form", apply=False)
@@ -46,7 +46,7 @@ class PostView(FlaskView):
         return ("Create Post",
                 status.HTTP_200_OK)
 
-    @doc(summary="Post feature", description="포스트 좋아요 추가")
+    @doc(tags=["Post"], summary="Post feature", description="포스트 좋아요 추가")
     @route("/like", methods=["POST"])
     @check_access_token
     @use_kwargs({"post_id": fields.String(required=True)}, location="query")
@@ -57,7 +57,7 @@ class PostView(FlaskView):
         return ("Like post",
                 status.HTTP_200_OK)
 
-    @doc(summary="Post feature", descripiton="포스트 삭제")
+    @doc(tags=["Post"], summary="Post feature", descripiton="포스트 삭제")
     @route("", methods=["DELETE"])
     @check_access_token
     @use_kwargs({"post_id": fields.String(required=True)}, location="query")
@@ -72,7 +72,7 @@ class PostView(FlaskView):
         return ("Delete post",
                 status.HTTP_200_OK)
 
-    @doc(summary="Post feature", description="포스트 수정")
+    @doc(tags=["Post"], summary="Post feature", description="포스트 수정")
     @route("", methods=["PUT"])
     @check_access_token
     @use_kwargs(PostInfoSchema, location="query")

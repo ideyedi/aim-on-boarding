@@ -30,7 +30,6 @@ class DescribeUserFeature:
             DescribeUserFeature.success_check()
 
 
-
 def test_example():
     assert 1 == 1
 

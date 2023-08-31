@@ -13,13 +13,13 @@ from app.service.board import BoardService
 
 class BoardView(FlaskView):
 
-    @doc(summary="Board feature health-check")
+    @doc(tags=["Board"], summary="Board feature health-check")
     @route("monitor", methods=["GET"])
     def board_monit(self):
         return ("Board healthCheck",
                 status.HTTP_200_OK)
 
-    @doc(summary="Board feature", description="게시판 생성")
+    @doc(tags=["Board"], summary="Board feature", description="게시판 생성")
     @route("", methods=["POST"])
     @check_access_token
     @use_kwargs(BoardCreateSchema, location="json_or_form", inherit=True, apply=False)
@@ -47,7 +47,7 @@ class BoardView(FlaskView):
         return ("Create board",
                 status.HTTP_200_OK)
 
-    @doc(summary="Board feature", description="게시판 삭제")
+    @doc(tags=["Board"], summary="Board feature", description="게시판 삭제")
     @route("", methods=["DELETE"])
     @check_access_token
     @use_kwargs(BoardDeleteSchema, location="json_or_form", inherit=True, apply=False)
@@ -64,7 +64,7 @@ class BoardView(FlaskView):
         return ("Delete board",
                 status.HTTP_200_OK)
 
-    @doc(summary="Board feature", description="게시판 수정")
+    @doc(tags=["Board"], summary="Board feature", description="게시판 수정")
     @route("", methods=["PATCH"])
     @check_access_token
     @use_kwargs(BoardInfoSchema(), location="query")
