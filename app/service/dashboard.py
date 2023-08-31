@@ -24,6 +24,15 @@ recent_pipeline = [
     {"$limit": 10}
 ]
 
+# grouping이 아닌 count를 해야겠는데?
+comment_pipeline = [
+    {"$group": {"_id": "$involve", "count": {"$sum": 1}}},
+    {"$project": {"post_id": "$_id",
+                  "count": 1}},
+    {"$sort": {"count": -1}},
+    {"$limit": 10}
+]
+
 # post 내 reference field에 내가 있는지 확인해야 함.
 my_like_posts_pipeline = [
     {""}
@@ -68,6 +77,18 @@ class DashboardService:
         for item in self.result_posts:
             item["_id"] = str(item["_id"])
 
+        return True
+
+    def get_comments_top10(self) -> bool:
+        agg = Comment.objects().aggregate(*comment_pipeline)
+
+        temp = list(agg)
+        for item in temp:
+            ret = Post.objects(id=item["post_id"]).first()
+            data = PostInfoSchema().dump(ret)
+            self.result_posts.append(data)
+
+        print(self.result_posts)
         return True
 
     def get_my_posts(self, user_id) -> bool:

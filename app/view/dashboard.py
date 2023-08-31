@@ -37,8 +37,9 @@ class DashBoardView(FlaskView):
     @route("likes", methods=["GET"])
     def likes_top10(self):
         dash_service = DashboardService()
-        dash_service.get_likes_top10()
-        print(dash_service.result_posts)
+        ret = dash_service.get_likes_top10()
+        if not ret:
+            raise ApiError("")
 
         return jsonify(dash_service.result_posts)
 
@@ -48,7 +49,7 @@ class DashBoardView(FlaskView):
         dash_service = DashboardService()
         ret = dash_service.get_recent_top10()
         if not ret:
-            return ApiError("Failed get recent posts")
+            raise ApiError("Failed get recent posts")
 
         return jsonify(dash_service.result_posts)
 
@@ -56,7 +57,11 @@ class DashBoardView(FlaskView):
     @route("comments", methods=["GET"])
     def comments_top10(self):
         dash_service = DashboardService()
-        pass
+        ret = dash_service.get_comments_top10()
+        if not ret:
+            raise ApiError("")
+
+        return jsonify(dash_service.result_posts)
 
     @doc(tags=["DashBoard"], summary="DashBoard feature", description="내가 쓴 포스트 조회")
     @route("my-posts", methods=["GET"])
@@ -64,6 +69,8 @@ class DashBoardView(FlaskView):
     def my_posts(self, **kwargs):
         dash_service = DashboardService()
         ret = dash_service.get_my_posts(kwargs["user_id"])
+        if not ret:
+            raise ApiError("")
 
         return jsonify(dash_service.result_posts)
 
@@ -84,5 +91,7 @@ class DashBoardView(FlaskView):
     def my_likes_posts(self, **kwargs):
         dash_service = DashboardService()
         ret = dash_service.get_my_like_posts(kwargs["user_id"])
+        if not ret:
+            raise ApiError("")
 
         return jsonify(dash_service.result_posts)
