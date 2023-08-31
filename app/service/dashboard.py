@@ -1,6 +1,8 @@
-from app.model.post import Post
-from app.model.user import User
-from app.schema.post import PostInfoSchema
+from app.model.post import *
+from app.model.user import *
+from app.model.comment import *
+from app.schema.post import *
+from app.schema.comment import *
 
 # Sorting
 # - Ascending : 1, descending : -1
@@ -19,6 +21,15 @@ recent_pipeline = [
                   "content": 1,
                   "create_time": 1}},
     {"$sort": {"create_time": -1}},
+    {"$limit": 10}
+]
+
+# grouping이 아닌 count를 해야겠는데?
+comment_pipeline = [
+    {"$group": {"_id": "$involve", "count": {"$sum": 1}}},
+    {"$project": {"post_id": "$_id",
+                  "count": 1}},
+    {"$sort": {"count": -1}},
     {"$limit": 10}
 ]
 
@@ -68,6 +79,18 @@ class DashboardService:
 
         return True
 
+    def get_comments_top10(self) -> bool:
+        agg = Comment.objects().aggregate(*comment_pipeline)
+
+        temp = list(agg)
+        for item in temp:
+            ret = Post.objects(id=item["post_id"]).first()
+            data = PostInfoSchema().dump(ret)
+            self.result_posts.append(data)
+
+        print(self.result_posts)
+        return True
+
     def get_my_posts(self, user_id) -> bool:
         agg = Post.objects(author__user_id=user_id)
         if agg is None:
@@ -80,6 +103,14 @@ class DashboardService:
         return True
 
     def get_my_comments(self, user_id) -> bool:
+        agg = Comment.objects(author=user_id)
+        if agg is None:
+            return False
+
+        for item in agg:
+            data = CommentInfoSchema().dump(item)
+            self.result_posts.append(data)
+
         return True
 
     def get_my_like_posts(self, user_id) -> bool:
