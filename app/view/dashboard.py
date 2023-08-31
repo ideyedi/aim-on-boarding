@@ -73,7 +73,10 @@ class DashBoardView(FlaskView):
     def my_comments(self, **kwargs):
         dash_service = DashboardService()
         ret = dash_service.get_my_comments(kwargs["user_id"])
-        pass
+        if not ret:
+            raise ApiError("")
+
+        return jsonify(dash_service.result_posts)
 
     @doc(tags=["DashBoard"], summary="DashBoard feature", description="내가 좋아요 누른 포스트")
     @route("my-likes-posts", methods=["GET"])

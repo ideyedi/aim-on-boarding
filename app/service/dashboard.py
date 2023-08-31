@@ -1,6 +1,8 @@
-from app.model.post import Post
-from app.model.user import User
-from app.schema.post import PostInfoSchema
+from app.model.post import *
+from app.model.user import *
+from app.model.comment import *
+from app.schema.post import *
+from app.schema.comment import *
 
 # Sorting
 # - Ascending : 1, descending : -1
@@ -80,6 +82,14 @@ class DashboardService:
         return True
 
     def get_my_comments(self, user_id) -> bool:
+        agg = Comment.objects(author=user_id)
+        if agg is None:
+            return False
+
+        for item in agg:
+            data = CommentInfoSchema().dump(item)
+            self.result_posts.append(data)
+
         return True
 
     def get_my_like_posts(self, user_id) -> bool:
