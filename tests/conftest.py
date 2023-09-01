@@ -1,26 +1,47 @@
 # pytest를 위한 공용 fixture 모음
-import pytest
 import mongomock
+import pytest
+import mongoengine
 
-from flask import current_app
+from unittest import mock
 from config import DevelopConfig
+
+
+def create_mock_session():
+    session = mock.Mock()
+    session.in_transaction = False
+
+    def _start_transaction():
+        session.in_transaction = True
+
+    def _end_session():
+        session.in_transaction = False
+
+    session.start_transaction = _start_transaction
+    session.end_session = _end_session
+    return session
 
 
 @pytest.fixture(scope="session")
 def app():
     from app import create_app
-
     app = create_app()
     return app
 
 
 @pytest.fixture()
-def fixture_client(fixture_app):
-    client = fixture_app.test_client()
+def client(app):
+    client = app.test_client()
     return client
 
 
-@pytest.fixture()
-def mock_mongo_client():
-    # mongomock을 이용하여 가상의 MongoDB 클라이언트를 생성합니다.
-    return mongomock.MongoClient()
+@pytest.fixture(scope="function", autouse=True)
+def get_db():
+    mongoengine.connect('on_board',
+                        host=DevelopConfig.mongo_url,
+                        mongo_client_class=mongomock.MongoClient,
+                        alias="testdb")
+    with mock.patch.object(attribute="what is this", side_effect=create_mock_session):
+        yield
+
+    mongoengine.disconnect(alias="testdb")

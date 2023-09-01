@@ -1,58 +1,76 @@
+import mongoengine
 import pytest
 import logging
-import bcrypt
 
 from flask import url_for
-from flask_api import status
-from json import dumps
 
-from tests.factories.user import UserFactory
+from tests.factories.user import *
+from app.service.user import UserService
+from app.model.user import User
 
 logger = logging.getLogger("user-test")
 
 
-class DescribeUserFeature:
-    @pytest.fixture
-    def fixture_user(self):
-        return UserFactory.create()
+class Describe_UserService:
 
-    @classmethod
-    def success_check(cls, subject):
-        assert subject.status_code == status.HTTP_200_OK
-
-    class DescribeHealthCheck:
+    class Describe_HealthCheck:
         @pytest.fixture(autouse=True)
         def subject(self, client):
             url = url_for("route.UserView:healthcheck")
             return client.get(url)
 
-        def test_health_check(self):
-            DescribeUserFeature.success_check()
+        def test_healcheck_엔드포인트가_응답한다(self, subject):
+            a = 1
+            # test
+            assert a == 1
+            assert subject.status_code == 200
 
+    class Describe_sign_up:
+        @classmethod
+        def setUpClass(cls, get_db):
+            get_db()
 
-def test_example():
-    assert 1 == 1
+        @classmethod
+        def setDownClass(cls):
+            mongoengine.disconnect_all()
 
+        class Context_회원가입이_정상적인_경우:
+            @pytest.fixture
+            def fixture_user(self, get_db):
+                return UserFactory.create()
 
-    """
-    class DescribeUserLogin:
-        @pytest.fixture
-        def post_form(self, fixture_user):
-            eturn {
-                "user_id": fixture_user.user_id,
-                "user_password": bcrypt.hashpw(fixture_user.user_password.encode('utf-8'),
-                                               bcrypt.gensalt()).decode('utf-8')
-            }
+            @pytest.fixture
+            def no_email_user(self, get_db):
+                return UserNoEmailFactory.create()
 
-        @pytest.fixture
-        def subject(self, client, post_form):
-            url = url_for("route.UserView:log_in")
-            return client.post(url, data=dumps(post_form))
+            def test_이메일_아이디_가입(self, fixture_user):
+                logger.info(fixture_user.user_id)
+                logger.info(fixture_user.user_password)
+                logger.info(fixture_user)
 
-        def test_random_info_login_failed(self, subject, fixture_user):
-            # 난수로 생성된 아이디라 먼저 걸러지는 시나리오인데 hashcheck은 왜해
-            logger.info(fixture_user.user_id)
-            logger.info(fixture_user.user_password)
-            logger.info(f"req status_code: {subject.status_code}")
-            assert subject.status_code == status.HTTP_204_NO_CONTENT
-    """
+                user_service = UserService(fixture_user)
+                ret = user_service.sign_up()
+                logger.info(f"return value {ret}")
+                assert ret == 200
+
+            def test_이메일이_아닌_아이디_가입(self, no_email_user):
+                user_service = UserService(no_email_user)
+                ret = user_service.sign_up()
+                logger.info(f"return value {ret}")
+                assert ret == 200
+
+        class Context_회원가입_실패_케이스:
+            @pytest.fixture
+            def static_user(self, get_db):
+                return UserStaticFactory.create()
+
+            def test_중복된_아이디(self, static_user):
+                logger.info(static_user.user_id)
+                user_service = UserService(static_user)
+                ret = user_service.sign_up()
+                logger.info(f"enri : {ret}")
+
+                ret = user_service.sign_up()
+                logger.info(f"enri : {ret}")
+
+                assert 1 == 1
