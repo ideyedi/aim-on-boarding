@@ -13,7 +13,7 @@ class CommentView(FlaskView):
 
     @doc(tags=["Comment"], summary="Comment feature", description="health-check monitor")
     @route("monitor", methods=["GET"])
-    def dashboard_monit(self):
+    def healthcheck(self):
         return ("Comment health-check",
                 status.HTTP_200_OK)
 

@@ -9,10 +9,10 @@ from tests.factories.user import *
 from app.service.user import UserService
 from app.model.user import User
 
-logger = logging.getLogger("user-test")
+logger = logging.getLogger("test-user")
 
 
-class Describe_UserService:
+class Describe_UserFeature:
 
     class Describe_HealthCheck:
         @pytest.fixture(autouse=True)
@@ -20,7 +20,7 @@ class Describe_UserService:
             url = url_for("route.UserView:healthcheck")
             return client.get(url)
 
-        def test_healcheck_엔드포인트가_응답한다(self, subject):
+        def test_User_블루프린트_응답확인(self, subject):
             a = 1
             # test
             assert a == 1

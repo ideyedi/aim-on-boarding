@@ -13,7 +13,7 @@ class PostView(FlaskView):
 
     @doc(tags=["Post"], summary="Post feature health-check")
     @route("monitor", methods=["GET"])
-    def post_monit(self):
+    def healthcheck(self):
         return ("Post health-Check",
                 status.HTTP_200_OK)
 
