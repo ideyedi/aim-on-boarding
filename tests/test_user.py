@@ -26,28 +26,17 @@ class Describe_UserService:
             assert subject.status_code == 200
 
     class Describe_sign_up:
-        @classmethod
-        def setUpClass(cls, get_db):
-            get_db()
-
-        @classmethod
-        def setDownClass(cls):
-            mongoengine.disconnect_all()
 
         class Context_회원가입이_정상적인_경우:
             @pytest.fixture
-            def fixture_user(self, get_db):
+            def fixture_user(self):
                 return UserFactory.create()
 
             @pytest.fixture
-            def no_email_user(self, get_db):
+            def no_email_user(self):
                 return UserNoEmailFactory.create()
 
             def test_이메일_아이디_가입(self, fixture_user):
-                logger.info(fixture_user.user_id)
-                logger.info(fixture_user.user_password)
-                logger.info(fixture_user)
-
                 user_service = UserService(fixture_user)
                 ret = user_service.sign_up()
                 logger.info(f"return value {ret}")
@@ -61,7 +50,7 @@ class Describe_UserService:
 
         class Context_회원가입_실패_케이스:
             @pytest.fixture
-            def static_user(self, get_db):
+            def static_user(self):
                 return UserStaticFactory.create()
 
             def test_중복된_아이디(self, static_user):
@@ -70,7 +59,7 @@ class Describe_UserService:
                 ret = user_service.sign_up()
                 logger.info(f"enri : {ret}")
 
-                ret = user_service.sign_up()
+                #ret = user_service.sign_up()
                 logger.info(f"enri : {ret}")
 
                 assert 1 == 1

@@ -149,6 +149,21 @@ trio = ["trio (>=0.14,<0.23)"]
 wmi = ["wmi (>=1.5.1,<2.0.0)"]
 
 [[package]]
+name = "email-validator"
+version = "2.0.0.post2"
+description = "A robust email address syntax and deliverability validation library."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "email_validator-2.0.0.post2-py3-none-any.whl", hash = "sha256:2466ba57cda361fb7309fd3d5a225723c788ca4bbad32a0ebd5373b99730285c"},
+    {file = "email_validator-2.0.0.post2.tar.gz", hash = "sha256:1ff6e86044200c56ae23595695c54e9614f4a9551e0e393614f764860b3d7900"},
+]
+
+[package.dependencies]
+dnspython = ">=2.0.0"
+idna = ">=2.0.0"
+
+[[package]]
 name = "exceptiongroup"
 version = "1.1.3"
 description = "Backport of PEP 654 (exception groups)"
@@ -291,6 +306,23 @@ files = [
 Flask = ">=0.9"
 
 [[package]]
+name = "flask-mongoengine"
+version = "1.0.0"
+description = "Flask-MongoEngine is a Flask extension that provides integration with MongoEngine and WTF model forms."
+optional = false
+python-versions = "*"
+files = [
+    {file = "flask-mongoengine-1.0.0.tar.gz", hash = "sha256:ce68726d2be8d88006e88f17e4be3b7ad07c79ca8dedb60653d3dab5d9485840"},
+    {file = "flask_mongoengine-1.0.0-py3-none-any.whl", hash = "sha256:2db13140ce7f61a935e75268190450d5ecc9b60a7310fd289f9511835aa105d4"},
+]
+
+[package.dependencies]
+Flask = ">=1.1.2"
+Flask-WTF = ">=0.14.3"
+mongoengine = ">=0.20"
+WTForms = {version = ">=2.3.1", extras = ["email"]}
+
+[[package]]
 name = "flask-swagger-ui"
 version = "4.11.1"
 description = "Swagger UI blueprint for Flask"
@@ -305,6 +337,25 @@ files = [
 flask = "*"
 
 [[package]]
+name = "flask-wtf"
+version = "1.1.1"
+description = "Form rendering, validation, and CSRF protection for Flask with WTForms."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "Flask-WTF-1.1.1.tar.gz", hash = "sha256:41c4244e9ae626d63bed42ae4785b90667b885b1535d5a4095e1f63060d12aa9"},
+    {file = "Flask_WTF-1.1.1-py3-none-any.whl", hash = "sha256:7887d6f1ebb3e17bf648647422f0944c9a469d0fcf63e3b66fb9a83037e38b2c"},
+]
+
+[package.dependencies]
+Flask = "*"
+itsdangerous = "*"
+WTForms = "*"
+
+[package.extras]
+email = ["email-validator"]
+
+[[package]]
 name = "funcy"
 version = "2.0"
 description = "A fancy and practical functional tools"
@@ -313,6 +364,17 @@ python-versions = "*"
 files = [
     {file = "funcy-2.0-py2.py3-none-any.whl", hash = "sha256:53df23c8bb1651b12f095df764bfb057935d49537a56de211b098f4c79614bb0"},
     {file = "funcy-2.0.tar.gz", hash = "sha256:3963315d59d41c6f30c04bc910e10ab50a3ac4a225868bfa96feed133df075cb"},
+]
+
+[[package]]
+name = "idna"
+version = "3.4"
+description = "Internationalized Domain Names in Applications (IDNA)"
+optional = false
+python-versions = ">=3.5"
+files = [
+    {file = "idna-3.4-py3-none-any.whl", hash = "sha256:90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2"},
+    {file = "idna-3.4.tar.gz", hash = "sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"},
 ]
 
 [[package]]
@@ -1117,6 +1179,24 @@ files = [
 ]
 
 [[package]]
+name = "wtforms"
+version = "3.0.1"
+description = "Form validation and rendering for Python web development."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "WTForms-3.0.1-py3-none-any.whl", hash = "sha256:837f2f0e0ca79481b92884962b914eba4e72b7a2daaf1f939c890ed0124b834b"},
+    {file = "WTForms-3.0.1.tar.gz", hash = "sha256:6b351bbb12dd58af57ffef05bc78425d08d1914e0fd68ee14143b7ade023c5bc"},
+]
+
+[package.dependencies]
+email-validator = {version = "*", optional = true, markers = "extra == \"email\""}
+MarkupSafe = "*"
+
+[package.extras]
+email = ["email-validator"]
+
+[[package]]
 name = "zipp"
 version = "3.16.2"
 description = "Backport of pathlib-compatible object wrapper for zip files"
@@ -1134,4 +1214,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "ebcd02f62d85265c9c000b36b444f0231664327918835426d2ee9d5dd7f068d4"
+content-hash = "d69ed61d6de3daa2d87715134cc105f89958de270d2862f10e0178286388ff1a"

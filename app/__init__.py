@@ -24,6 +24,7 @@ def create_app():
          expose_headers=["content-disposition"],
          max_age=6000).init_app(app)
 
+    # App
     register_db()
     route_extension(app)
 
@@ -44,7 +45,7 @@ def register_db():
     :return:
     """
     try:
-        me.connect(host=DevelopConfig.mongo_url)
+        me.connect(host=DevelopConfig.mongo_url,alias="Boarding")
     except ConnectionError:
         print(f"{str(ConnectionError)}")
     except Exception as e:
