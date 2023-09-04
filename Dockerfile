@@ -2,7 +2,6 @@ FROM python:3.8
 
 MAINTAINER enrique "enrique@aimmo.co.kr"
 
-
 RUN apt-get update && apt-get install -y \
     libgl1-mesa-dev \
     libspatialindex-dev \
@@ -18,12 +17,7 @@ COPY pyproject.toml /eimmo-backend/pyproject.toml
 COPY poetry.lock /eimmo-backend/poetry.lock
 RUN poetry config virtualenvs.create false
 
-# bluewhale private pypi
-#RUN poetry config repositories.bluewhale https://pypi.bluewhale.kr
-#RUN poetry config http-basic.bluewhale $PYPI_SECRET_USER $PYPI_SECRET_KEY
-
 RUN poetry install
-#RUN pip install azure-appconfiguration==1.3.0
 
 COPY . /eimmo-backend/
 

@@ -37,9 +37,8 @@ class UserService:
         return token
 
     def sign_up(self):
-        ret = self.dao_user.save()
-        print(f"ret; {ret}")
-        return status.HTTP_200_OK
+        self.dao_user.save()
+        return status.HTTP_201_CREATED
 
     def log_in(self, input_pw):
         # invalid check 기능 위치 변경
