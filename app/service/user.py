@@ -37,7 +37,10 @@ class UserService:
         return token
 
     def sign_up(self):
-        self.dao_user.save()
+        ret = self.dao_user.save()
+        if not ret:
+            return status.HTTP_406_NOT_ACCEPTABLE
+
         return status.HTTP_201_CREATED
 
     def log_in(self, input_pw):

@@ -37,8 +37,6 @@ def check_access_token(func):
 def check_refresh_token(func):
     """
     OAuth2.0 Refresh token Decorator
-    :param func:
-    :return:
     """
     @wraps(func)
     def decorator(*args, **kwargs):
@@ -50,8 +48,6 @@ def check_refresh_token(func):
 def user_info_validator(func):
     """
     Sign-up 전 인입된 User 정보를 확인
-    :param func:
-    :return:
     """
     @wraps(func)
     def decorated_view(*args, **kwargs):
@@ -59,7 +55,8 @@ def user_info_validator(func):
             CreateSchema().load(json.loads(request.data))
 
         except ValidationError as err:
-            return jsonify(err.messages), status.HTTP_409_CONFLICT
+            raise ApiError(f"{err.messages}",
+                           status_code=status.HTTP_409_CONFLICT)
 
         return func(*args, **kwargs)
     return decorated_view

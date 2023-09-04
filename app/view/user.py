@@ -26,23 +26,17 @@ class UserView(FlaskView):
     @user_info_validator
     @use_kwargs(UserSchema, location="json")
     def sign_up(self, **kwargs):
-        """
-        request data type
-        Content-Type: application/json
-        Data-Raw JSON
-        """
         user = CreateSchema().load(json.loads(request.data))
         if user is False:
-            return ("Error",
+            return ("Failed Sign-up",
                     status.HTTP_409_CONFLICT)
 
         user_service = UserService(user)
         ret = user_service.sign_up()
-        if ret is not status.HTTP_200_OK:
-            return ("Login Failed",
-                    ret)
+        if ret is not status.HTTP_201_CREATED:
+            return "Not Acceptable", status.HTTP_406_NOT_ACCEPTABLE
 
-        return "OK", ret
+        return "Create", status.HTTP_201_CREATED
 
     @doc(tags=["User"], summary="USER Feature 유저 정보 수정")
     @route("", methods=["PUT"])
