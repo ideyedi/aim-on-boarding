@@ -1,35 +1,11 @@
-import json
-import jwt
 import bcrypt
 
-from flask import request, jsonify
-from flask_api import status
-from functools import wraps
-from marshmallow import ValidationError
 from typing import Dict, Any
 from datetime import datetime, timedelta
 
-from app.schema.user import CreateSchema
 from app.model.user import User
+from core.user import *
 from config import config as c
-
-
-def user_info_validator(func):
-    """
-    Sign-up 전 인입된 User 정보를 확인
-    :param func:
-    :return:
-    """
-    @wraps(func)
-    def decorated_view(*args, **kwargs):
-        try:
-            CreateSchema().load(json.loads(request.data))
-
-        except ValidationError as err:
-            return jsonify(err.messages), status.HTTP_409_CONFLICT
-
-        return func(*args, **kwargs)
-    return decorated_view
 
 
 class UserService:
@@ -62,7 +38,7 @@ class UserService:
 
     def sign_up(self):
         ret = self.dao_user.save()
-        print(ret)
+        print(f"ret; {ret}")
         return status.HTTP_200_OK
 
     def log_in(self, input_pw):

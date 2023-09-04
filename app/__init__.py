@@ -45,7 +45,7 @@ def register_db():
     :return:
     """
     try:
-        me.connect(host=DevelopConfig.mongo_url,alias="Boarding")
+        me.connect(host=DevelopConfig.mongo_url, alias="default")
     except ConnectionError:
         print(f"{str(ConnectionError)}")
     except Exception as e:

@@ -15,7 +15,7 @@ class BoardView(FlaskView):
 
     @doc(tags=["Board"], summary="Board feature health-check")
     @route("monitor", methods=["GET"])
-    def board_monit(self):
+    def healthcheck(self):
         return ("Board healthCheck",
                 status.HTTP_200_OK)
 

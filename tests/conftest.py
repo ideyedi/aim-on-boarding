@@ -16,7 +16,7 @@ def app():
     import mongoengine
     app = create_app()
 
-    mongoengine.disconnect(alias="Boarding")
+    mongoengine.disconnect(alias="default")
     # Create_app에서 생성된 기능을 위한 DB Connection Close
 
     db = MongoEngine()
@@ -45,6 +45,5 @@ def get_test_db():
 @pytest.fixture()
 def client(app):
     client = app.test_client()
-    db = mongoengine
     return client
 
