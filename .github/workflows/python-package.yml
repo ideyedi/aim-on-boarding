@@ -12,7 +12,8 @@ on:
 # github image repository
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: aim-on
+  TAG: latest
   
 jobs:
   build:
@@ -34,4 +35,7 @@ jobs:
       run: docker build -t aim-on:0.0.1 .
 
     - name: check image
-      run: docker image ls 
+      run: docker image ls
+
+    - name: Docker image push
+      run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ env.TAG }}
