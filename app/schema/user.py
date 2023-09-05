@@ -39,7 +39,7 @@ class CreateSchema(Schema):
 
     @validates_schema
     def validate_create_user(self, data,  **kwargs):
-        print(f"marshmallow validation check")
+        #print(f"marshmallow validation check")
         pass
 
 
@@ -78,10 +78,6 @@ class ModifySchema(Schema):
 
 
 class InfoSchema(UserSchema):
-    #class Meta:
-    #    fields = ["user_id"]
-    #    exclude = ("user_password", "is_admin")
-
     expire = fields.DateTime()
 
     @post_load()

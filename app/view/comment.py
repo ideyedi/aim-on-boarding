@@ -13,21 +13,25 @@ class CommentView(FlaskView):
 
     @doc(tags=["Comment"], summary="Comment feature", description="health-check monitor")
     @route("monitor", methods=["GET"])
-    def dashboard_monit(self):
+    def healthcheck(self):
         return ("Comment health-check",
                 status.HTTP_200_OK)
 
     @doc(tags=["Comment"], summary="Comment feature", description="write comment")
     @route("", methods=["POST"])
     @check_access_token
-    @use_kwargs(CommentCreateSchema, location="json_or_form", apply=False, inherit=True)
+    @use_kwargs(CommentCreateSchema, location="json", apply=False, inherit=True)
     def post(self, **kwargs):
+        # Validate model required field
         comment_model = CommentCreateSchema().load(request.get_json())
         comment_model.author = kwargs["user_id"]
 
         comment_service = CommentService()
         ret = comment_service.write_comment(comment_model)
-        print(ret)
+        if not ret:
+            raise ApiError("Failed to write comment",
+                           status_code=status.HTTP_409_CONFLICT)
+
         return ("Write comment",
                 status.HTTP_200_OK)
 
@@ -40,5 +44,4 @@ class CommentView(FlaskView):
         if not ret:
             raise ApiError("")
 
-        # HTTP로 전달할 때 ReferenceField는 Object String으로 나오네?
         return jsonify(comment_service.result)

@@ -20,8 +20,7 @@ class Post(me.Document):
 
     create_time = me.DateTimeField(default=datetime.now().utcnow())
     modified_time = me.DateTimeField(default=datetime.now().utcnow())
-    # 단순히 integer만 관리할 경우 내가 누른 좋아요 판단이 불가능
-    # linking 구조로 변경
+
     like = me.ListField(me.ReferenceField(User))
     author = me.EmbeddedDocumentField(Author)
     board = me.ReferenceField(Board)

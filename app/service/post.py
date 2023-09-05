@@ -33,8 +33,8 @@ class PostService:
         print(like_user.user_id, type(like_user))
         self._post_model.like.append(like_user)
         print(self._post_model.like)
-        # list 이길
         # 누른 유저가 누구 인지 관리 되어야 함
+        # 좋아요 취소 기능을 생각한다면 한번만 누를수 있는 제한도 필요하겠네
 
         ret = self._post_model.save()
         if not ret:
