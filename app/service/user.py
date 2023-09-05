@@ -52,7 +52,7 @@ class UserService:
         access_token = self._create_access_token(
             self.dao_user.user_id, self.dao_user.is_admin
         )
-        refresh_token = self._create_access_token(
+        refresh_token = self._create_refresh_token(
             self.dao_user.user_id, self.dao_user.is_admin
         )
         tokens_dict: Dict = {"access_token": access_token,

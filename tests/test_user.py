@@ -4,10 +4,8 @@ import requests
 
 from flask import url_for
 
-
 from tests.factories.user import *
 from app.service.user import UserService
-from app.model.user import User
 
 logger = logging.getLogger("test-user")
 
@@ -26,9 +24,9 @@ class Describe_UserFeature:
             assert a == 1
             assert subject.status_code == 200
 
-    class Describe_sign_up:
+    class Describe_POST_Sign_up:
 
-        class Context_회원가입이_정상적인_경우:
+        class Context_아이디_패스워드_입력_상황:
             @pytest.fixture
             def fixture_user(self):
                 return UserFactory.create()
@@ -37,19 +35,19 @@ class Describe_UserFeature:
             def no_email_user(self):
                 return UserNoEmailFactory.create()
 
-            def test_이메일_아이디_가입(self, fixture_user):
+            def test_이메일_아이디_가입_201(self, fixture_user):
                 user_service = UserService(fixture_user)
                 ret = user_service.sign_up()
                 logger.info(f"return value {ret}")
                 assert ret == 201
 
-            def test_이메일이_아닌_아이디_가입(self, no_email_user):
+            def test_이메일이_아닌_아이디_가입_201(self, no_email_user):
                 user_service = UserService(no_email_user)
                 ret = user_service.sign_up()
                 logger.info(f"return value {ret}")
                 assert ret == 201
 
-        class Context_회원가입_실패_케이스:
+        class Context_중복된_아이디가_존재:
             @pytest.fixture
             def static_user(self):
                 return UserStaticFactory.create()
@@ -59,14 +57,18 @@ class Describe_UserFeature:
                 url = url_for("route.UserView:sign_up")
                 return client.get(url)
 
-            def test_중복된_아이디(self, static_user, client):
+            def test_중복된_아이디가_존재하여_실패_409(self, static_user, client):
                 logger.info(static_user.user_id)
                 # dummy data input
                 user_service = UserService(static_user)
-                ret = user_service.sign_up()
-                data = {"user_id": static_user.user_id, "user_password": static_user.user_password}
-                response = requests.post("http://localhost:5000/user", json=data)
+                user_service.sign_up()
 
-                logger.info(response.status_code)
+                data = {"user_id": static_user.user_id, "user_password": static_user.user_password}
+                headers = {
+                    "context-type": "application/json"
+                }
+
+                with requests.Session() as sess:
+                    response = sess.post("http://localhost:5000/user", headers=headers, json=data, verify=False)
 
                 assert response.status_code == 409

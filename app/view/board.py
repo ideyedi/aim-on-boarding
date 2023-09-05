@@ -25,24 +25,20 @@ class BoardView(FlaskView):
     @use_kwargs(BoardCreateSchema, location="json_or_form", inherit=True, apply=False)
     @marshal_with(ApiErrorSchema(), code=422, description="정상적이지만 서비스에서 처리 불가능")
     def create_board(self, **kwargs):
-        # json body location으로 보내고 싶은데 스웨거 상에서는 조회가 안되는 부분 확인 필요
-        # use_kwargs apply false를 주지 않을 경우 스웨거 상 query 동작으로만 처리
-        # apply를 끄니까 동작은 하는데 스웨거, 스키마 validation 처리가 안되네
-
-        # 스키마 생성하면서 검증 로직 태움
         in_board = BoardCreateSchema().load(request.get_json())
-        print(type(request.get_json()), request.get_json())
+        #print(type(request.get_json()), request.get_json())
         if in_board is False:
-            raise ApiError("Create failed",
-                           status.HTTP_400_BAD_REQUEST)
+            raise ApiError("Duplicated Title",
+                           status_code=status.HTTP_409_CONFLICT)
 
         board_service = BoardService(in_board)
-        # Board 관리자 지정
+        # Board service setter
         board_service.admin = kwargs["user_id"]
 
         ret = board_service.create_board()
-        print(f"{__name__}{ret}")
-        print(board_service.name, board_service.description)
+        if ret is not True:
+            raise ApiError("Failed to create board",
+                           status_code=status.HTTP_406_NOT_ACCEPTABLE)
 
         return ("Create board",
                 status.HTTP_200_OK)

@@ -1,6 +1,7 @@
 from app.model.comment import *
 from app.schema.comment import *
 
+
 class CommentService:
     def __init__(self):
         self.result = []
@@ -23,14 +24,12 @@ class CommentService:
         return self.result
 
     def get_all_comments_in_posts(self, post_id: str) -> bool:
-        print(self.result)
         ret = Comment.objects(involve=post_id)
-
-        # MongoDB '_id'를 알고 있으면 바로 단번에 조회가 가능하네
-        # Front에서 알수있도록 이걸 제공해야하나?
+        if ret is None:
+            return False
+        # Graceful 하게 많은 model list를 재정렬하는 방법이 필요
         for item in ret:
             serialized_data = CommentInfoSchema().dump(item)
             self.result.append(serialized_data)
-            print(serialized_data)
 
         return True
