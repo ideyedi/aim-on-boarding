@@ -38,7 +38,7 @@ jobs:
       run: docker image ls
 
     - name: docker login
-      run: login ghcr.io -u ${{ secret.PACKAGE_ID }} -p ${{ secret.PACKAGE_TOKEN }}
+      run: login ghcr.io -u ${{ secrets.PACKAGE_ID }} -p ${{ secrets.PACKAGE_TOKEN }}
 
     # 깃헙액션에서 변수를 할당하는 방법이 있을텐데 ..
     - name: Get docker image
