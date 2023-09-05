@@ -37,5 +37,17 @@ jobs:
     - name: check image
       run: docker image ls
 
-    - name: Docker image push
-      run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ env.TAG }}
+    - name: docker login
+      run: login ghcr.io -u ${{ secret.PACKAGE_ID }} -p ${{ secret.PACKAGE_TOKEN }}
+
+    # 깃헙액션에서 변수를 할당하는 방법이 있을텐데 ..
+    - name: Get docker image
+      run: |
+        IMAGE_ID=$(docker image ls ${{ env.IMAGE_NAME }}:${{ env.TAG }} -q)
+        echo $IMAGE_ID
+
+    #- name: Make image tag in ghcr.io
+    #  run: 
+
+    #- name: Docker image push
+    #  run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ env.TAG }}
