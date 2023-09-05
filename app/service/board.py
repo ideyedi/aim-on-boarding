@@ -1,4 +1,7 @@
 from app.model.board import Board, EmbedUser
+from app.error import ApiError
+
+from flask_api import status
 
 
 class BoardService:
@@ -22,12 +25,14 @@ class BoardService:
     def admin(self, admin: str):
         self._board.admin = EmbedUser(user_id=admin)
 
-    def create_board(self):
-        print(self._board.__repr__())
+    def create_board(self) -> bool:
         ret = self._board.save()
+        if not ret:
+            return False
+
         return True
 
-    def modify_board(self):
+    def modify_board(self) -> bool:
         tmp_model = self._board
 
         # 해당되는 첫번째 데이터를 수정

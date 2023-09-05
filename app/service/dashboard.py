@@ -24,7 +24,6 @@ recent_pipeline = [
     {"$limit": 10}
 ]
 
-# grouping이 아닌 count를 해야겠는데?
 comment_pipeline = [
     {"$group": {"_id": "$involve", "count": {"$sum": 1}}},
     {"$project": {"post_id": "$_id",

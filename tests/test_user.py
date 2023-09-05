@@ -1,59 +1,74 @@
 import pytest
 import logging
-import bcrypt
+import requests
 
 from flask import url_for
-from flask_api import status
-from json import dumps
 
-from tests.factories.user import UserFactory
+from tests.factories.user import *
+from app.service.user import UserService
 
-logger = logging.getLogger("user-test")
+logger = logging.getLogger("test-user")
 
 
-class DescribeUserFeature:
-    @pytest.fixture
-    def fixture_user(self):
-        return UserFactory.create()
+class Describe_UserFeature:
 
-    @classmethod
-    def success_check(cls, subject):
-        assert subject.status_code == status.HTTP_200_OK
-
-    class DescribeHealthCheck:
+    class Describe_HealthCheck:
         @pytest.fixture(autouse=True)
         def subject(self, client):
             url = url_for("route.UserView:healthcheck")
             return client.get(url)
 
-        def test_health_check(self):
-            DescribeUserFeature.success_check()
+        def test_User_블루프린트_응답확인(self, subject):
+            a = 1
+            # test
+            assert a == 1
+            assert subject.status_code == 200
 
+    class Describe_POST_Sign_up:
 
+        class Context_아이디_패스워드_입력_상황:
+            @pytest.fixture
+            def fixture_user(self):
+                return UserFactory.create()
 
-def test_example():
-    assert 1 == 1
+            @pytest.fixture
+            def no_email_user(self):
+                return UserNoEmailFactory.create()
 
+            def test_이메일_아이디_가입_201(self, fixture_user):
+                user_service = UserService(fixture_user)
+                ret = user_service.sign_up()
+                logger.info(f"return value {ret}")
+                assert ret == 201
 
-    """
-    class DescribeUserLogin:
-        @pytest.fixture
-        def post_form(self, fixture_user):
-            eturn {
-                "user_id": fixture_user.user_id,
-                "user_password": bcrypt.hashpw(fixture_user.user_password.encode('utf-8'),
-                                               bcrypt.gensalt()).decode('utf-8')
-            }
+            def test_이메일이_아닌_아이디_가입_201(self, no_email_user):
+                user_service = UserService(no_email_user)
+                ret = user_service.sign_up()
+                logger.info(f"return value {ret}")
+                assert ret == 201
 
-        @pytest.fixture
-        def subject(self, client, post_form):
-            url = url_for("route.UserView:log_in")
-            return client.post(url, data=dumps(post_form))
+        class Context_중복된_아이디가_존재:
+            @pytest.fixture
+            def static_user(self):
+                return UserStaticFactory.create()
 
-        def test_random_info_login_failed(self, subject, fixture_user):
-            # 난수로 생성된 아이디라 먼저 걸러지는 시나리오인데 hashcheck은 왜해
-            logger.info(fixture_user.user_id)
-            logger.info(fixture_user.user_password)
-            logger.info(f"req status_code: {subject.status_code}")
-            assert subject.status_code == status.HTTP_204_NO_CONTENT
-    """
+            @pytest.fixture
+            def subject(self, client):
+                url = url_for("route.UserView:sign_up")
+                return client.get(url)
+
+            def test_중복된_아이디가_존재하여_실패_409(self, static_user, client):
+                logger.info(static_user.user_id)
+                # dummy data input
+                user_service = UserService(static_user)
+                user_service.sign_up()
+
+                data = {"user_id": static_user.user_id, "user_password": static_user.user_password}
+                headers = {
+                    "context-type": "application/json"
+                }
+
+                with requests.Session() as sess:
+                    response = sess.post("http://localhost:5000/user", headers=headers, json=data, verify=False)
+
+                assert response.status_code == 409

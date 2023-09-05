@@ -14,7 +14,7 @@ class UserView(FlaskView):
     """
     유저 Front side
     """
-    @doc(summary="user apis heathCheck")
+    @doc(tags=["User"], summary="user apis heathCheck")
     @route("monitor", methods=["GET"])
     def healthcheck(self):
         print(f"{request.data}")
@@ -22,29 +22,23 @@ class UserView(FlaskView):
                 status.HTTP_200_OK)
 
     @route("", methods=["POST"])
-    @doc(description="user sign-up", summary="USER Feature 회원가입")
+    @doc(tags=["User"], description="user sign-up", summary="USER Feature 회원가입")
     @user_info_validator
     @use_kwargs(UserSchema, location="json")
-    def sing_up(self, **kwargs):
-        """
-        request data type
-        Content-Type: application/json
-        Data-Raw JSON
-        """
+    def sign_up(self, **kwargs):
         user = CreateSchema().load(json.loads(request.data))
         if user is False:
-            return ("Error",
+            return ("Failed Sign-up",
                     status.HTTP_409_CONFLICT)
 
         user_service = UserService(user)
         ret = user_service.sign_up()
-        if ret is not status.HTTP_200_OK:
-            return ("Login Failed",
-                    ret)
+        if ret is not status.HTTP_201_CREATED:
+            return "Not Acceptable", status.HTTP_406_NOT_ACCEPTABLE
 
-        return "OK", ret
+        return "Create", status.HTTP_201_CREATED
 
-    @doc(summary="USER Feature 유저 정보 수정")
+    @doc(tags=["User"], summary="USER Feature 유저 정보 수정")
     @route("", methods=["PUT"])
     def modify(self):
         modify_user = ModifySchema().load(json.loads(request.data))
@@ -53,7 +47,7 @@ class UserView(FlaskView):
 
         return ret
 
-    @doc(summary="USER Feature 유저 정보 조회")
+    @doc(tags=["User"], summary="USER Feature 유저 정보 조회")
     @route("", methods=["GET"])
     @marshal_with(ApiErrorSchema, code=status.HTTP_400_BAD_REQUEST, description="test")
     @marshal_with(ApiErrorSchema, code=status.HTTP_500_INTERNAL_SERVER_ERROR, description="Server Error")
@@ -94,7 +88,7 @@ class UserView(FlaskView):
                 status.HTTP_200_OK
                 )
 
-    @doc(summary="USER Feature log-in")
+    @doc(tags=["User"], summary="USER Feature log-in")
     @route("login", methods=["POST"])
     def log_in(self):
         login_user = LoginSchema().load(json.loads(request.data))
@@ -117,7 +111,7 @@ class UserView(FlaskView):
         return (tokens,
                 status.HTTP_200_OK)
 
-    @doc()
+    @doc(tags=["User"], summary="-")
     @route("logout", methods=["POST"])
     def log_out(self):
         pass
