@@ -32,3 +32,6 @@ jobs:
     
     - name: Dockerize
       run: docker build -t aim-on:0.0.1 .
+
+    - name: check image
+      run: docker image ls 
