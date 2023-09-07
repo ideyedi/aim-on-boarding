@@ -39,13 +39,13 @@ class Describe_UserFeature:
                 user_service = UserService(fixture_user)
                 ret = user_service.sign_up()
                 logger.info(f"return value {ret}")
-                assert ret == 201
+                assert ret == True
 
             def test_이메일이_아닌_아이디_가입_201(self, no_email_user):
                 user_service = UserService(no_email_user)
                 ret = user_service.sign_up()
                 logger.info(f"return value {ret}")
-                assert ret == 201
+                assert ret == True
 
         class Context_중복된_아이디가_존재:
             @pytest.fixture

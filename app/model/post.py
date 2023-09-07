@@ -1,4 +1,4 @@
-import mongoengine as me
+from mongoengine import *
 
 from datetime import datetime
 
@@ -6,24 +6,24 @@ from app.model.board import Board
 from app.model.user import User
 
 
-class Author(me.EmbeddedDocument):
-    user_id = me.StringField()
+class Author(EmbeddedDocument):
+    user_id = StringField()
 
     def __repr__(self):
         return f"<Author user_id: {self.user_id}>"
 
 
-class Post(me.Document):
-    title = me.StringField(required=True)
-    content = me.StringField()
-    hashtag = me.StringField()
+class Post(Document):
+    title = StringField(required=True)
+    content = StringField()
+    hashtag = StringField()
 
-    create_time = me.DateTimeField(default=datetime.now().utcnow())
-    modified_time = me.DateTimeField(default=datetime.now().utcnow())
+    create_time = DateTimeField(default=datetime.now().utcnow())
+    modified_time = DateTimeField(default=datetime.now().utcnow())
 
-    like = me.ListField(me.ReferenceField(User))
-    author = me.EmbeddedDocumentField(Author)
-    board = me.ReferenceField(Board)
+    like = ListField(ReferenceField(User))
+    author = EmbeddedDocumentField(Author)
+    board = ReferenceField(Board)
 
     def __repr__(self):
         return f"<POST Model Title: {self.title}, like: {len(self.like)}>"

@@ -23,6 +23,7 @@ from flask_api import status
 from app.service.dashboard import DashboardService
 from app.error import ApiError
 from core.user import check_access_token
+from app.schema.post import *
 
 
 class DashBoardView(FlaskView):
@@ -35,13 +36,13 @@ class DashBoardView(FlaskView):
 
     @doc(tags=["DashBoard"], summary="DashBoard feature", description="Posts Likes-Top10")
     @route("likes", methods=["GET"])
+    @marshal_with(PostInfoSchema, code=status.HTTP_200_OK)
     def likes_top10(self):
         dash_service = DashboardService()
         ret = dash_service.get_likes_top10()
+        print(ret)
         if not ret:
             raise ApiError("")
-
-        return jsonify(dash_service.result_posts)
 
     @doc(tags=["DashBoard"], summary="DashBoard feature", description="Posts Recent-Top10")
     @route("recent", methods=["GET"])
@@ -95,3 +96,14 @@ class DashBoardView(FlaskView):
             raise ApiError("")
 
         return jsonify(dash_service.result_posts)
+
+    @doc(tags=["DashBoard"], summary="DashBoard feature", description="comment-tree")
+    @route("tree", methods=["GET"])
+    @use_kwargs({"post_id": fields.Str(required=True)}, location="query")
+    def get_comment_tree(self,
+                         **kw):
+        print(__name__)
+
+        dash_service = DashboardService()
+        ret = dash_service.get_comment_tree()
+        pass

@@ -25,7 +25,6 @@ class PostCreateSchema(Schema):
 class PostInfoSchema(PostSchema):
     content = fields.Str()
     hashtag = fields.Str()
-    post_id = fields.Str(default=None)
 
     @post_load()
     def make_object(self, data, **kwargs):

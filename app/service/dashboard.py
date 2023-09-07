@@ -32,9 +32,16 @@ comment_pipeline = [
     {"$limit": 10}
 ]
 
-# post 내 reference field에 내가 있는지 확인해야 함.
-my_like_posts_pipeline = [
-    {""}
+connect_by_pipeline = [
+    {
+        "$graphLookup": {
+            "from": "comment",
+            "startWith": "$_id",
+            "connectFromField": "parent",
+            "connectToField": "_id",
+            "as": "hierarchy_comments"
+        }
+    }
 ]
 
 
@@ -44,7 +51,7 @@ class DashboardService:
         self.result_posts = []
         pass
 
-    def get_likes_top10(self) -> bool:
+    def get_likes_top10(self):
         """
         모든 포스트에서 좋아요가 많은 10개 오더링
         :return:
@@ -54,14 +61,8 @@ class DashboardService:
             print(f"Can't get data : {ret}")
             return False
 
-        self.result_posts = list(ret)
-
-        # 좀 더 Graceful하게 변경하고 싶음..
-        # Mongo bson의 objectId 필드가 jsonify할 경우 바로 파싱이 안됨.
-        for item in self.result_posts:
-            item["_id"] = str(item["_id"])
-
-        return True
+        #self.result_posts = list(ret)
+        return list(ret)
 
     def get_recent_top10(self) -> bool:
         """
@@ -72,7 +73,7 @@ class DashboardService:
             return False
 
         self.result_posts = list(agg)
-        print(self.result_posts)
+
         for item in self.result_posts:
             item["_id"] = str(item["_id"])
 
@@ -81,8 +82,11 @@ class DashboardService:
     def get_comments_top10(self) -> bool:
         agg = Comment.objects().aggregate(*comment_pipeline)
 
-        temp = list(agg)
-        for item in temp:
+        list_post_id = list(agg)
+        #
+        print(list_post_id)
+
+        for item in list_post_id:
             ret = Post.objects(id=item["post_id"]).first()
             data = PostInfoSchema().dump(ret)
             self.result_posts.append(data)
@@ -129,3 +133,15 @@ class DashboardService:
             self.result_posts.append(serialized_data)
 
         return True
+
+    @classmethod
+    def get_comment_tree(cls):
+        agg = Comment.objects().aggregate(*connect_by_pipeline)
+        if agg is None:
+            return False
+
+        print(agg)
+        for item in agg:
+            print(item)
+
+        return list(agg)
