@@ -28,15 +28,16 @@ class UserView(FlaskView):
     def sign_up(self, **kwargs):
         user = CreateSchema().load(json.loads(request.data))
         if user is False:
-            return ("Failed Sign-up",
-                    status.HTTP_409_CONFLICT)
+            return "Failed Sign-up", status.HTTP_409_CONFLICT
 
         user_service = UserService(user)
         ret = user_service.sign_up()
-        if ret is not status.HTTP_201_CREATED:
-            return "Not Acceptable", status.HTTP_406_NOT_ACCEPTABLE
+        if not ret:
+            raise ApiError("Not Acceptable",
+                           status_code=status.HTTP_406_NOT_ACCEPTABLE)
 
-        return "Create", status.HTTP_201_CREATED
+        return ("Sign-up Success",
+                status.HTTP_201_CREATED)
 
     @doc(tags=["User"], summary="USER Feature 유저 정보 수정")
     @route("", methods=["PUT"])
@@ -58,12 +59,7 @@ class UserView(FlaskView):
         JWT 파싱 후 user_id 기준으로 정보 조회
         location을 명시하면 custom header에 들어가는 걸 확인할 수 있음
         OAuth 2.0 Bearer Token Method
-        : test token
-        : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZXNqaUBnbWFpbC5jb20iLCJpc19hZG1pbiI6ZmFsc2UsImV4cGlyZSI6IjIwMjMtMDgtMjQgMDQ6Mzk6MTguMDMyOTgyIn0.te1hLM1zTswtgIge1FcwVaT2Nvx3vUgoXWxM8pEm--U
         """
-        print(request.headers.get("jwt_access_token"))
-        print(request.data, jwt_access_token)
-        # values = request.headers.get("Authorization").split(" ")
         token = jwt_access_token
         bearer = jwt.decode(token,
                             key="access_secret",
@@ -90,23 +86,24 @@ class UserView(FlaskView):
 
     @doc(tags=["User"], summary="USER Feature log-in")
     @route("login", methods=["POST"])
+    @use_kwargs(LoginSchema, location="json", apply=False)
     def log_in(self):
         login_user = LoginSchema().load(json.loads(request.data))
         if not login_user:
-            return ("Not Founded User-info",
-                    status.HTTP_204_NO_CONTENT)
+            raise ApiError("Not Founded User-info",
+                           status_code=status.HTTP_401_UNAUTHORIZED)
 
         try:
             input_password = json.loads(request.data)["user_password"]
-        except KeyError:
-            return ("Conflict password",
-                    status.HTTP_401_UNAUTHORIZED)
+        except Exception as e:
+            raise ApiError(f"{e}",
+                           status_code=status.HTTP_401_UNAUTHORIZED)
 
         user_service = UserService(login_user)
         tokens = user_service.log_in(input_password)
         if not tokens:
-            return ("Invalid password",
-                    status.HTTP_401_UNAUTHORIZED)
+            raise ApiError("Invalid password",
+                           status_code=status.HTTP_401_UNAUTHORIZED)
 
         return (tokens,
                 status.HTTP_200_OK)

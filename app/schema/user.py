@@ -44,7 +44,6 @@ class CreateSchema(Schema):
 
 
 class LoginSchema(Schema):
-    _id = fields.Str(unique=True)
     user_id = fields.Str(required=True, unique=True)
     user_password = fields.Str()
 

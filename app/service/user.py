@@ -39,9 +39,9 @@ class UserService:
     def sign_up(self):
         ret = self.dao_user.save()
         if not ret:
-            return status.HTTP_406_NOT_ACCEPTABLE
+            return False
 
-        return status.HTTP_201_CREATED
+        return True
 
     def log_in(self, input_pw):
         # invalid check 기능 위치 변경
